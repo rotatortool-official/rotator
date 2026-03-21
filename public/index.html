@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v6_5.html -->
+<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v6_6.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -766,16 +766,61 @@ var CACHE={coins:null,forex:{},stocks:{},coinsAt:0};
 var CACHE_TTL=5*60*1000;
 
 function unwrap(r){if(!r) return r;if(typeof r.contents==='string'){try{return JSON.parse(r.contents);}catch(e){}}if(typeof r.data==='string'){try{return JSON.parse(r.data);}catch(e){}}if(r.data!==undefined&&typeof r.data==='object') return r.data;return r;}
+
 async function apiFetch(url){
-  var urlWithKey=url+(url.indexOf('?')>=0?'&':'?')+'x_cg_demo_api_key='+CG_KEY;
-  var ps=[
-    ()=>fetch(urlWithKey,{signal:AbortSignal.timeout(10000)}),
-    ()=>fetch('https://corsproxy.io/?'+encodeURIComponent(urlWithKey),{signal:AbortSignal.timeout(12000)}),
-    ()=>fetch('https://api.allorigins.win/get?url='+encodeURIComponent(urlWithKey),{signal:AbortSignal.timeout(12000)})
+  // Try multiple approaches in order
+  var attempts=[
+    // 1. Direct with key
+    async function(){
+      var u=url+(url.indexOf('?')>=0?'&':'?')+'x_cg_demo_api_key='+CG_KEY;
+      var r=await fetch(u,{signal:AbortSignal.timeout(8000)});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return await r.json();
+    },
+    // 2. Direct without key
+    async function(){
+      var r=await fetch(url,{signal:AbortSignal.timeout(8000)});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return await r.json();
+    },
+    // 3. corsproxy.io with key
+    async function(){
+      var u=url+(url.indexOf('?')>=0?'&':'?')+'x_cg_demo_api_key='+CG_KEY;
+      var r=await fetch('https://corsproxy.io/?'+encodeURIComponent(u),{signal:AbortSignal.timeout(12000)});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      var j=await r.json();return unwrap(j);
+    },
+    // 4. allorigins with key
+    async function(){
+      var u=url+(url.indexOf('?')>=0?'&':'?')+'x_cg_demo_api_key='+CG_KEY;
+      var r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(u),{signal:AbortSignal.timeout(12000)});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      var j=await r.json();return unwrap(j);
+    },
+    // 5. corsproxy without key
+    async function(){
+      var r=await fetch('https://corsproxy.io/?'+encodeURIComponent(url),{signal:AbortSignal.timeout(12000)});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      var j=await r.json();return unwrap(j);
+    },
+    // 6. thingproxy
+    async function(){
+      var r=await fetch('https://thingproxy.freeboard.io/fetch/'+url,{signal:AbortSignal.timeout(12000)});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return await r.json();
+    }
   ];
   var errs=[];
-  for(var i=0;i<ps.length;i++){try{var r=await ps[i]();if(!r.ok) throw new Error('HTTP '+r.status);var j=await r.json();var u=unwrap(j);if(u&&u.status&&u.status.error_code===429) throw new Error('rate_limited');return u;}catch(e){errs.push(e.message);}}
-  throw new Error(errs.join(' | '));
+  for(var i=0;i<attempts.length;i++){
+    try{
+      var result=await attempts[i]();
+      if(result&&result.status&&result.status.error_code===429) throw new Error('rate_limited');
+      if(result&&Array.isArray(result)) return result;
+      if(result&&typeof result==='object'&&!result.error_message) return result;
+      throw new Error('bad response');
+    }catch(e){errs.push('attempt '+(i+1)+': '+e.message);}
+  }
+  throw new Error('All attempts failed: '+errs.join(' | '));
 }
 async function avFetch(params){
   var url='https://www.alphavantage.co/query?'+params+'&apikey='+AV_KEY;
