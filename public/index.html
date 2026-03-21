@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v6_1.html -->
+<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v6_2.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -384,43 +384,6 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
 </style>
 </head>
 <body>
-
-<!-- ══════════════════════════════
-     SPLASH SCREEN
-══════════════════════════════ -->
-<div class="splash" id="splash">
-  <div class="splash-logo">
-    <span class="splash-letter gold">R</span>
-    <span class="splash-letter red">O</span>
-    <span class="splash-letter gold">T</span>
-    <span class="splash-letter gold">A</span>
-    <span class="splash-letter gold">T</span>
-    <span class="splash-letter teal">O</span>
-    <span class="splash-letter gold">R</span>
-  </div>
-  <div class="splash-tagline">Binance Rotation Screener · Top 50 Coins</div>
-  <div class="splash-steps">
-    <div class="splash-step">
-      <div class="splash-step-num">1</div>
-      <div class="splash-step-title">ADD HOLDINGS</div>
-      <div class="splash-step-desc">Select a coin, enter your quantity and average buy price</div>
-    </div>
-    <div class="splash-divider"></div>
-    <div class="splash-step">
-      <div class="splash-step-num">2</div>
-      <div class="splash-step-title">READ SIGNALS</div>
-      <div class="splash-step-desc">See which coins to rotate out of and into based on performance score</div>
-    </div>
-    <div class="splash-divider"></div>
-    <div class="splash-step">
-      <div class="splash-step-num">3</div>
-      <div class="splash-step-title">TRACK P&amp;L</div>
-      <div class="splash-step-desc">Monitor profit/loss and portfolio score in real time</div>
-    </div>
-  </div>
-  <button class="splash-enter" onclick="closeSplash()">ENTER ROTATOR →</button>
-  <div class="splash-skip" onclick="closeSplash()">skip intro</div>
-</div>
 
 <!-- DONATE MODAL -->
 <div class="overlay" id="donate-modal" onclick="if(event.target===this)closeModal(&#39;donate-modal&#39;)">
@@ -1233,18 +1196,22 @@ async function doLoad(){
   busy=true;document.getElementById('rbtn').disabled=true;document.getElementById('rspin').className='spinning';
   try{
     await loadCoins();
-    prog(50,'SCORING…');
-    await loadForex();
-    await loadStocks();
-    buildAllAssets();
+    prog(60,'SCORING…');
     computeScores();
+    buildAllAssets();
     renderCoinSel();
     await loadBTC();
-    prog(95,'RENDERING…');
-    renderAll();
     prog(100,'READY');
+    renderAll();
     await sleep(320);
     document.getElementById('loader').classList.add('gone');
+    // Load forex + stocks in background AFTER app is visible
+    loadForex().then(function(){
+      computeScores();buildAllAssets();renderAll();
+    }).catch(function(e){console.warn('Forex bg load failed:',e);});
+    loadStocks().then(function(){
+      computeScores();buildAllAssets();renderAll();
+    }).catch(function(e){console.warn('Stocks bg load failed:',e);});
   }catch(e){
     document.getElementById('lmsg').textContent='ERROR: '+e.message;
     document.getElementById('lbf').style.background='var(--red)';
