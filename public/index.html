@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v5_2.html -->
+<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v5_3.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -488,7 +488,7 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
 <div class="topbar">
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
     <div class="logo">⬡ ROTATOR <span class="logo-sub">/ BINANCE TOP 50</span></div>
-    <span class="tier-badge free" id="tier-badge">FREE · TOP 30</span>
+    <span class="tier-badge free" id="tier-badge">FREE · TOP 50</span>
     <div class="btc-pill unk" id="btc-pill"><span class="pulse"></span><span id="btc-pill-txt">BTC: LOADING</span></div>
     <div class="btc-meta"><span id="btc-p">—</span><span style="margin-left:8px;" id="btc-ma"></span></div>
   </div>
@@ -707,15 +707,24 @@ function revokePro(){isPro=false;savePro(false);closeModal('pro-modal');updateTi
 function updateTierBadge(){
   var b=document.getElementById('tier-badge'),pb=document.getElementById('pro-top-btn'),d=getRefData(),count=d.refs.length;
   if(isPro){b.className='tier-badge pro';b.textContent='⚡ PRO · TOP 50';if(pb){pb.textContent='⚡ PRO ACTIVE';pb.style.opacity='.6';}}
-  else{b.className='tier-badge free';b.textContent='FREE · TOP 30';if(pb){pb.textContent=count>0?'⚡ UNLOCK PRO ('+count+'/3)':'⚡ UNLOCK PRO';pb.style.opacity='';}}
+  else{b.className='tier-badge free';b.textContent='FREE · TOP 50';if(pb){pb.textContent=count>0?'⚡ UNLOCK PRO ('+count+'/3)':'⚡ UNLOCK PRO';pb.style.opacity='';}}
 }
 
 /* ══════════════════════════════
    FETCH
 ══════════════════════════════ */
+var CG_KEY='CG-kwUo9NXvdHwJhFgo21p8Utij';
+var CACHE={coins:null,btc:null,coinsAt:0,btcAt:0};
+var CACHE_TTL=5*60*1000; // 5 minutes cache
+
 function unwrap(r){if(!r) return r;if(typeof r.contents==='string'){try{return JSON.parse(r.contents);}catch(e){}}if(typeof r.data==='string'){try{return JSON.parse(r.data);}catch(e){}}if(r.data!==undefined&&typeof r.data==='object') return r.data;return r;}
 async function apiFetch(url){
-  var ps=[()=>fetch(url,{signal:AbortSignal.timeout(8000)}),()=>fetch('https://corsproxy.io/?'+encodeURIComponent(url),{signal:AbortSignal.timeout(10000)}),()=>fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url),{signal:AbortSignal.timeout(10000)}),()=>fetch('https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(url),{signal:AbortSignal.timeout(10000)})];
+  var urlWithKey=url+(url.indexOf('?')>=0?'&':'?')+'x_cg_demo_api_key='+CG_KEY;
+  var ps=[
+    ()=>fetch(urlWithKey,{signal:AbortSignal.timeout(10000)}),
+    ()=>fetch('https://corsproxy.io/?'+encodeURIComponent(urlWithKey),{signal:AbortSignal.timeout(12000)}),
+    ()=>fetch('https://api.allorigins.win/get?url='+encodeURIComponent(urlWithKey),{signal:AbortSignal.timeout(12000)})
+  ];
   var errs=[];
   for(var i=0;i<ps.length;i++){try{var r=await ps[i]();if(!r.ok) throw new Error('HTTP '+r.status);var j=await r.json();var u=unwrap(j);if(u&&u.status&&u.status.error_code===429) throw new Error('rate_limited');return u;}catch(e){errs.push(e.message);}}
   throw new Error(errs.join(' | '));
@@ -725,23 +734,29 @@ var sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function prog(p,m){document.getElementById('lbf').style.width=p+'%';document.getElementById('lmsg').textContent=m;}
 
 async function loadCoins(){
+  var now=Date.now();
+  if(CACHE.coins&&(now-CACHE.coinsAt)<CACHE_TTL){coins=CACHE.coins;computeScores();return;}
   prog(10,'FETCHING TOP 50 COINS…');
   var allIds=FREE_COINS.concat(PRO_EXTRA_COINS).join(',');
   var url='https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids='+allIds+'&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h,7d,14d,30d';
   var data=await apiFetch(url);
   if(!Array.isArray(data)) throw new Error('Invalid data from CoinGecko');
-  coins=data.map(function(c){return{id:c.id,sym:c.symbol.toUpperCase(),name:c.name,price:c.current_price,image:c.image,mcap:c.market_cap,rank:0,p24:c.price_change_percentage_24h||0,p7:c.price_change_percentage_7d_in_currency||0,p14:c.price_change_percentage_14d_in_currency||0,p30:c.price_change_percentage_30d_in_currency||0,score:0,r7:0,r14:0,r30:0,isPro:PRO_EXTRA_COINS.indexOf(c.id)>=0};});
+  coins=data.map(function(c){return{id:c.id,sym:c.symbol.toUpperCase(),name:c.name,price:c.current_price,image:c.image,mcap:c.market_cap,rank:0,p24:c.price_change_percentage_24h||0,p7:c.price_change_percentage_7d_in_currency||0,p14:c.price_change_percentage_14d_in_currency||0,p30:c.price_change_percentage_30d_in_currency||0,score:0,r7:0,r14:0,r30:0,isPro:false};});
   coins.sort(function(a,b){return b.mcap-a.mcap;});
   coins.forEach(function(c,i){c.rank=i+1;});
+  CACHE.coins=coins;CACHE.coinsAt=now;
   computeScores();
 }
 
 async function loadBTC(){
-  prog(65,'FETCHING BTC 200D MA…');await sleep(1200);
+  var now=Date.now();
+  if(CACHE.btc&&(now-CACHE.btcAt)<CACHE_TTL){btcMA200=CACHE.btc.ma;btcPrice=CACHE.btc.price;return;}
+  prog(65,'FETCHING BTC 200D MA…');await sleep(600);
   var d=await apiFetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=200');
   if(!d||!Array.isArray(d.prices)) throw new Error('BTC history invalid');
   var p=d.prices,s=0;for(var i=0;i<p.length;i++) s+=p[i][1];
   btcMA200=s/p.length;btcPrice=p[p.length-1][1];
+  CACHE.btc={ma:btcMA200,price:btcPrice};CACHE.btcAt=now;
 }
 
 function computeScores(){
@@ -780,7 +795,7 @@ function renderSignal(hc){var el=document.getElementById('sig-content');if(!hc||
 
 function renderTopBars(){
   var hSyms=holdings.map(function(h){return h.sym;});
-  var visibleCoins=isPro?coins:coins.filter(function(c){return !c.isPro;});
+  var visibleCoins=coins;
   var w3=visibleCoins.slice().sort(function(a,b){return a.p30-b.p30;}).slice(0,3);
   document.getElementById('worst-cards').innerHTML=w3.map(function(c){return '<div class="worst-card"><div class="wc-ico"><img src="'+c.image+'" alt="" onerror="this.style.display=\'none\'"></div><div class="wc-info"><div class="wc-sym">'+c.sym+'</div><div class="wc-name">'+c.name+'</div></div><div class="wc-right"><div class="wc-pct">'+(c.p30>=0?'+':'')+c.p30.toFixed(1)+'%</div><div class="wc-lbl">30d</div><div class="wc-scr">score '+c.score+'</div></div></div>';}).join('');
   var sugEl=document.getElementById('sug-cards');
@@ -799,15 +814,11 @@ function renderTable(){
   var body=document.getElementById('tbody');if(!coins.length) return;
   var sorted=coins.slice().sort(function(a,b){if(sortTF===0) return b.score-a.score;if(sortTF===24) return b.p24-a.p24;if(sortTF===7) return b.p7-a.p7;if(sortTF===14) return b.p14-a.p14;return b.p30-a.p30;});
   var hSyms=holdings.map(function(h){return h.sym;});
-  var freeCoins=sorted.filter(function(c){return !c.isPro;});
-  var proCoins=sorted.filter(function(c){return c.isPro;});
-  var toRender=isPro?sorted:freeCoins;
-  var html=toRender.map(function(c,i){var isH=hSyms.indexOf(c.sym)>=0;var sc=c.score;var scC=sc>=65?'var(--green)':sc<=35?'var(--red)':'var(--amber)';return '<tr class="'+(isH?'held':'')+'"><td style="color:var(--muted);font-size:10px;">'+(i+1)+'</td><td><div class="cc"><div class="ti"><img src="'+c.image+'" alt="" onerror="this.style.display=\'none\'"></div><div><div style="display:flex;align-items:center;"><span class="tsym">'+c.sym+'</span>'+(isH?'<span class="htag">HELD</span>':'')+(c.isPro?'<span class="pro-tag">PRO</span>':'')+'</div><div class="tname">'+c.name+'</div></div></div></td><td class="r" style="padding-right:8px;">'+fmtP(c.price)+'</td><td class="pc">'+pctSpan(c.p24)+'</td><td class="pc">'+pctSpan(c.p7)+'</td><td class="pc">'+pctSpan(c.p14)+'</td><td class="pc">'+pctSpan(c.p30)+'</td><td class="r"><div class="sw"><span class="sv" style="color:'+scC+';">'+sc+'</span><div class="sb"><div class="sbf" style="width:'+sc+'%;background:'+scC+';"></div></div></div></td></tr>';}).join('');
-  if(!isPro&&proCoins.length){var d=getRefData();var cnt=d.refs.length;html+='<tr class="pro-upsell-row"><td colspan="8"><div class="pro-upsell-banner"><div class="pub-left"><span class="pub-icon">⚡</span><div><div class="pub-txt">+'+proCoins.length+' more coins available in Pro</div><div class="pub-sub">Share with 3 friends to unlock free — '+(cnt>0?cnt+'/3 friends joined':'no referrals yet')+'</div></div></div><button class="pub-btn" onclick="openPro()">GET PRO FREE →</button></div></td></tr>';}
+  var html=sorted.map(function(c,i){var isH=hSyms.indexOf(c.sym)>=0;var sc=c.score;var scC=sc>=65?'var(--green)':sc<=35?'var(--red)':'var(--amber)';return '<tr class="'+(isH?'held':'')+'"><td style="color:var(--muted);font-size:10px;">'+(i+1)+'</td><td><div class="cc"><div class="ti"><img src="'+c.image+'" alt="" onerror="this.style.display=\'none\'"></div><div><div style="display:flex;align-items:center;"><span class="tsym">'+c.sym+'</span>'+(isH?'<span class="htag">HELD</span>':'')+'</div><div class="tname">'+c.name+'</div></div></div></td><td class="r" style="padding-right:8px;">'+fmtP(c.price)+'</td><td class="pc">'+pctSpan(c.p24)+'</td><td class="pc">'+pctSpan(c.p7)+'</td><td class="pc">'+pctSpan(c.p14)+'</td><td class="pc">'+pctSpan(c.p30)+'</td><td class="r"><div class="sw"><span class="sv" style="color:'+scC+';">'+sc+'</span><div class="sb"><div class="sbf" style="width:'+sc+'%;background:'+scC+';"></div></div></div></td></tr>';}).join('');
   body.innerHTML=html;
 }
 
-function renderCoinSel(){var sel=document.getElementById('coin-sel');var hSyms=holdings.map(function(h){return h.sym;});var visibleCoins=isPro?coins:coins.filter(function(c){return !c.isPro;});sel.innerHTML='<option value="">Select…</option>'+visibleCoins.map(function(c){var held=hSyms.indexOf(c.sym)>=0;return '<option value="'+c.sym+'"'+(held?' disabled':')')+'>'+(held?'✓ ':'')+c.sym+' — '+c.name+'</option>';}).join('');}
+function renderCoinSel(){var sel=document.getElementById('coin-sel');var hSyms=holdings.map(function(h){return h.sym;});sel.innerHTML='<option value="">Select…</option>'+coins.map(function(c){var held=hSyms.indexOf(c.sym)>=0;return '<option value="'+c.sym+'"'+(held?' disabled':')')+'>'+(held?'✓ ':'')+c.sym+' — '+c.name+'</option>';}).join('');}
 
 function renderAll(){renderBTC();renderTiles();renderTopBars();renderTable();renderCoinSel();updateTierBadge();var now=new Date();document.getElementById('ts').textContent='UPDATED '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
 
