@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v6_2.html -->
+<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v6_5.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1194,6 +1194,12 @@ function removeHolding(sym){if(sparkStop[sym]){sparkStop[sym]();delete sparkStop
 async function doLoad(){
   processIncomingRef();var _d=checkMyReferrals();TIER=loadTier();
   busy=true;document.getElementById('rbtn').disabled=true;document.getElementById('rspin').className='spinning';
+
+  // Hard timeout — open app after 8s no matter what
+  var forceOpen=setTimeout(function(){
+    document.getElementById('loader').classList.add('gone');
+  },8000);
+
   try{
     await loadCoins();
     prog(60,'SCORING…');
@@ -1204,6 +1210,7 @@ async function doLoad(){
     prog(100,'READY');
     renderAll();
     await sleep(320);
+    clearTimeout(forceOpen);
     document.getElementById('loader').classList.add('gone');
     // Load forex + stocks in background AFTER app is visible
     loadForex().then(function(){
@@ -1213,13 +1220,10 @@ async function doLoad(){
       computeScores();buildAllAssets();renderAll();
     }).catch(function(e){console.warn('Stocks bg load failed:',e);});
   }catch(e){
+    clearTimeout(forceOpen);
     document.getElementById('lmsg').textContent='ERROR: '+e.message;
     document.getElementById('lbf').style.background='var(--red)';
-    var skipBtn=document.createElement('button');
-    skipBtn.textContent='SKIP & ENTER →';
-    skipBtn.style.cssText='margin-top:16px;padding:8px 24px;background:rgba(243,186,47,.1);border:1px solid rgba(243,186,47,.3);color:#f3ba2f;font-family:IBM Plex Mono,monospace;font-size:12px;font-weight:600;letter-spacing:.15em;cursor:pointer;border-radius:3px;';
-    skipBtn.onclick=function(){document.getElementById('loader').classList.add('gone');document.getElementById('splash').classList.add('gone');};
-    document.getElementById('loader').appendChild(skipBtn);
+    document.getElementById('loader').classList.add('gone');
   }
   busy=false;document.getElementById('rbtn').disabled=false;document.getElementById('rspin').className='';
 }
