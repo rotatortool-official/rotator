@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v6_7.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="ROTATOR — Track your favourite crypto projects and how your assets perform. Free Binance rotation screener, top 50 coins.">
 <title>⬡ ROTATOR — Binance Rotation Screener</title>
-<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 100 100&#39;&gt;&lt;text y=&#39;.9em&#39; font-size=&#39;90&#39;&gt;%E2%AC%A1&lt;/text&gt;&lt;/svg&gt;">
-<link href="./index_files/css2" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#090c0f;--bg2:#0d1117;--bg3:#121820;--bg4:#181f28;--bgz:#0b0e13;
@@ -370,7 +370,7 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
 
 /* ── LOADER ── */
 .loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:500;transition:opacity .35s;}
-.loader.gone{opacity:0;pointer-events:none;}
+.loader.gone{opacity:0;pointer-events:none;display:none;}
 .llogo{font-size:16px;font-weight:600;letter-spacing:.22em;color:var(--bnb);}
 .lmsg{font-size:11px;color:var(--muted);letter-spacing:.1em;}
 .lbar{width:160px;height:2px;background:var(--bg4);border-radius:1px;overflow:hidden;}
@@ -386,33 +386,33 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
 <body>
 
 <!-- DONATE MODAL -->
-<div class="overlay" id="donate-modal" onclick="if(event.target===this)closeModal(&#39;donate-modal&#39;)">
+<div class="overlay" id="donate-modal" onclick="if(event.target===this)closeModal('donate-modal')">
   <div class="modal">
-    <button class="modal-x" onclick="closeModal(&#39;donate-modal&#39;)">×</button>
+    <button class="modal-x" onclick="closeModal('donate-modal')">×</button>
     <div class="modal-title">☕ Support Rotator</div>
     <div class="modal-sub">If this tool helps your trading, consider buying me a coffee. Every contribution keeps the screener free.</div>
     <div class="network-tag">⬡ USDT · TRC20 NETWORK ONLY</div>
     <div class="addr-box">TGt3FQmv8AFPqbj6PnQGUAmemV9gDNm4bt</div>
-    <button class="copy-btn" id="copy-donate-btn" onclick="copyAddr(&#39;TGt3FQmv8AFPqbj6PnQGUAmemV9gDNm4bt&#39;,&#39;copy-donate-btn&#39;)">COPY ADDRESS</button>
+    <button class="copy-btn" id="copy-donate-btn" onclick="copyAddr('TGt3FQmv8AFPqbj6PnQGUAmemV9gDNm4bt','copy-donate-btn')">COPY ADDRESS</button>
     <div class="modal-note">⚠ Send only USDT on TRC20 (Tron) network.<br>Wrong network = permanent loss. Always double-check.</div>
   </div>
 </div>
 
 <!-- PRO MODAL -->
-<div class="overlay" id="pro-modal" onclick="if(event.target===this)closeModal(&#39;pro-modal&#39;)">
+<div class="overlay" id="pro-modal" onclick="if(event.target===this)closeModal('pro-modal')">
   <div class="modal">
-    <button class="modal-x" onclick="closeModal(&#39;pro-modal&#39;)">×</button>
+    <button class="modal-x" onclick="closeModal('pro-modal')">×</button>
     <div id="pro-modal-body"></div>
   </div>
 </div>
 
 <!-- ABOUT MODAL -->
-<div class="overlay" id="about-modal" onclick="if(event.target===this)closeModal(&#39;about-modal&#39;)">
+<div class="overlay" id="about-modal" onclick="if(event.target===this)closeModal('about-modal')">
   <div class="modal">
-    <button class="modal-x" onclick="closeModal(&#39;about-modal&#39;)">×</button>
+    <button class="modal-x" onclick="closeModal('about-modal')">×</button>
     <div class="modal-title">⬡ About Rotator</div>
     <div class="modal-sub">One more tool for people who care about their crypto — built to help you track your favourite projects and understand how your assets are really performing.</div>
-    <div class="about-feature"><div class="about-feature-icon">◈</div><div class="about-feature-txt"><strong>Track your holdings</strong> — add any coin with your quantity and average buy price. See real-time P&amp;L at a glance.</div></div>
+    <div class="about-feature"><div class="about-feature-icon">◈</div><div class="about-feature-txt"><strong>Track your holdings</strong> — add any coin with your quantity and average buy price. See real-time P&L at a glance.</div></div>
     <div class="about-feature"><div class="about-feature-icon">↑</div><div class="about-feature-txt"><strong>Rotation signals</strong> — our scoring system ranks coins by 7D, 14D and 30D performance so you know what's outperforming and what's lagging.</div></div>
     <div class="about-feature"><div class="about-feature-icon">◎</div><div class="about-feature-txt"><strong>BTC trend indicator</strong> — the 200-day moving average tells you whether the broader market is in a bull or bear phase.</div></div>
     <div class="about-feature"><div class="about-feature-icon">⚡</div><div class="about-feature-txt"><strong>Pro tier</strong> — unlock 50 coins (vs 30 free) by sharing your referral link with 3 friends. Completely free — no payment needed.</div></div>
@@ -422,9 +422,9 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
 </div>
 
 <!-- FAQ MODAL -->
-<div class="overlay" id="faq-modal" onclick="if(event.target===this)closeModal(&#39;faq-modal&#39;)">
+<div class="overlay" id="faq-modal" onclick="if(event.target===this)closeModal('faq-modal')">
   <div class="modal">
-    <button class="modal-x" onclick="closeModal(&#39;faq-modal&#39;)">×</button>
+    <button class="modal-x" onclick="closeModal('faq-modal')">×</button>
     <div class="modal-title">FAQ</div>
     <div class="faq-item">
       <div class="faq-q">What is Rotator?</div>
@@ -454,9 +454,9 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
 </div>
 
 <!-- SCORE MODAL -->
-<div class="overlay" id="score-modal" onclick="if(event.target===this)closeModal(&#39;score-modal&#39;)">
+<div class="overlay" id="score-modal" onclick="if(event.target===this)closeModal('score-modal')">
   <div class="modal">
-    <button class="modal-x" onclick="closeModal(&#39;score-modal&#39;)">×</button>
+    <button class="modal-x" onclick="closeModal('score-modal')">×</button>
     <div class="modal-title">◎ How the Score Works</div>
     <div class="modal-sub">Each coin gets a score from 0 to 100 based on its recent price performance across three timeframes — 7 days, 14 days, and 30 days.</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.8;">For each timeframe, every coin is ranked against all others (rank 1 = best performer). The three ranks are averaged, then converted to a 0–100 score. A coin that consistently outperforms across all timeframes scores highest.</div>
@@ -494,7 +494,7 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
   <div class="topbar-r">
     <span class="ts" id="ts">—</span>
     <button class="btn pro-btn" id="pro-top-btn" onclick="openPro()">⚡ UNLOCK PRO</button>
-    <button class="btn donate" onclick="openModal(&#39;donate-modal&#39;)">☕ SUPPORT</button>
+    <button class="btn donate" onclick="openModal('donate-modal')">☕ SUPPORT</button>
     <button class="btn acc" id="rbtn" onclick="doRefresh()"><span id="rspin">↻</span> REFRESH</button>
   </div>
 </div>
@@ -542,10 +542,10 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <div class="ptitle">PERFORMANCE LEADERBOARD</div>
         <div class="asset-filter-tabs">
-          <button class="aft active all" id="af-all" onclick="setAssetFilter(&#39;all&#39;)">ALL</button>
-          <button class="aft crypto" id="af-crypto" onclick="setAssetFilter(&#39;crypto&#39;)">⬡ CRYPTO</button>
-          <button class="aft forex" id="af-forex" onclick="setAssetFilter(&#39;forex&#39;)">₣ FOREX</button>
-          <button class="aft stock" id="af-stock" onclick="setAssetFilter(&#39;stock&#39;)">📈 STOCKS</button>
+          <button class="aft active all" id="af-all" onclick="setAssetFilter('all')">ALL</button>
+          <button class="aft crypto" id="af-crypto" onclick="setAssetFilter('crypto')">⬡ CRYPTO</button>
+          <button class="aft forex" id="af-forex" onclick="setAssetFilter('forex')">₣ FOREX</button>
+          <button class="aft stock" id="af-stock" onclick="setAssetFilter('stock')">📈 STOCKS</button>
         </div>
       </div>
       <div class="tf-tabs">
@@ -584,19 +584,19 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
 
 <!-- FOOTER -->
 <div class="footer">
-  <button class="footer-btn" onclick="openModal(&#39;about-modal&#39;)">⬡ About</button>
+  <button class="footer-btn" onclick="openModal('about-modal')">⬡ About</button>
   <span class="footer-sep">·</span>
-  <button class="footer-btn" onclick="openModal(&#39;faq-modal&#39;)">FAQ</button>
+  <button class="footer-btn" onclick="openModal('faq-modal')">FAQ</button>
   <span class="footer-sep">·</span>
-  <button class="footer-btn" onclick="openModal(&#39;score-modal&#39;)">◎ How Scoring Works</button>
+  <button class="footer-btn" onclick="openModal('score-modal')">◎ How Scoring Works</button>
   <span class="footer-sep">·</span>
-  <button class="footer-btn" onclick="openModal(&#39;donate-modal&#39;)">☕ Support</button>
+  <button class="footer-btn" onclick="openModal('donate-modal')">☕ Support</button>
 </div>
 
 <!-- ONBOARDING TOOLTIP -->
 <div class="onboard-tip" id="onboard-tip">
   <div class="onboard-tip-icon">👋</div>
-  <div class="onboard-tip-txt">Welcome! Start by <strong>selecting a coin</strong> in the left panel and adding it to your holdings. The screener will then show you rotation signals and your P&amp;L.</div>
+  <div class="onboard-tip-txt">Welcome! Start by <strong>selecting a coin</strong> in the left panel and adding it to your holdings. The screener will then show you rotation signals and your P&L.</div>
   <button class="onboard-tip-close" onclick="dismissTip()">×</button>
 </div>
 
@@ -865,29 +865,60 @@ function getTierForStock(sym){
   return 'premium';
 }
 
+var FALLBACK_COINS=[
+  {id:'bitcoin',sym:'BTC',name:'Bitcoin',price:83000,image:'https://assets.coincap.io/assets/icons/btc@2x.png',mcap:1600000000000,rank:1,p24:0.5,p7:2.1,p14:3.2,p30:8.4,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'ethereum',sym:'ETH',name:'Ethereum',price:1800,image:'https://assets.coincap.io/assets/icons/eth@2x.png',mcap:220000000000,rank:2,p24:-0.3,p7:-1.2,p14:-2.1,p30:-5.3,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'binancecoin',sym:'BNB',name:'BNB',price:580,image:'https://assets.coincap.io/assets/icons/bnb@2x.png',mcap:85000000000,rank:3,p24:0.8,p7:3.1,p14:4.2,p30:9.1,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'solana',sym:'SOL',name:'Solana',price:130,image:'https://assets.coincap.io/assets/icons/sol@2x.png',mcap:65000000000,rank:4,p24:1.2,p7:4.5,p14:6.3,p30:12.1,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'ripple',sym:'XRP',name:'XRP',price:2.1,image:'https://assets.coincap.io/assets/icons/xrp@2x.png',mcap:120000000000,rank:5,p24:-0.5,p7:-2.1,p14:-3.5,p30:-8.2,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'dogecoin',sym:'DOGE',name:'Dogecoin',price:0.17,image:'https://assets.coincap.io/assets/icons/doge@2x.png',mcap:25000000000,rank:6,p24:0.2,p7:0.8,p14:1.1,p30:2.3,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'cardano',sym:'ADA',name:'Cardano',price:0.68,image:'https://assets.coincap.io/assets/icons/ada@2x.png',mcap:24000000000,rank:7,p24:-0.8,p7:-3.2,p14:-4.5,p30:-10.1,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'avalanche-2',sym:'AVAX',name:'Avalanche',price:22,image:'https://assets.coincap.io/assets/icons/avax@2x.png',mcap:9000000000,rank:8,p24:1.5,p7:5.2,p14:7.8,p30:15.3,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'chainlink',sym:'LINK',name:'Chainlink',price:13,image:'https://assets.coincap.io/assets/icons/link@2x.png',mcap:8000000000,rank:9,p24:0.9,p7:3.8,p14:5.6,p30:11.2,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'},
+  {id:'polkadot',sym:'DOT',name:'Polkadot',price:4.2,image:'https://assets.coincap.io/assets/icons/dot@2x.png',mcap:6500000000,rank:10,p24:-1.1,p7:-4.3,p14:-6.2,p30:-13.5,score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:'free'}
+];
+
 async function loadCoins(){
   var now=Date.now();
   if(CACHE.coins&&(now-CACHE.coinsAt)<CACHE_TTL){coins=CACHE.coins;computeScores();return;}
-  prog(10,'FETCHING CRYPTO DATA…');
-  // Always fetch all coins so tier switching works without re-fetch
-  var allIds=CRYPTO_FREE.concat(CRYPTO_PRO).concat(CRYPTO_PREMIUM).join(',');
-  var url='https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids='+allIds+'&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h,7d,14d,30d';
-  var data=await apiFetch(url);
-  if(!Array.isArray(data)) throw new Error('Invalid data from CoinGecko');
-  coins=data.map(function(c){return{
-    id:c.id,sym:c.symbol.toUpperCase(),name:c.name,
-    price:c.current_price,image:c.image,mcap:c.market_cap,rank:0,
-    p24:c.price_change_percentage_24h||0,
-    p7:c.price_change_percentage_7d_in_currency||0,
-    p14:c.price_change_percentage_14d_in_currency||0,
-    p30:c.price_change_percentage_30d_in_currency||0,
-    score:0,r7:0,r14:0,r30:0,
-    type:'crypto',tierReq:getTierForCrypto(c.id)
-  };});
-  coins.sort(function(a,b){return b.mcap-a.mcap;});
-  coins.forEach(function(c,i){c.rank=i+1;});
-  CACHE.coins=coins;CACHE.coinsAt=now;
-  computeScores();
+
+  // Load fallback data instantly so app always shows something
+  if(!coins.length){
+    coins=FALLBACK_COINS.slice();
+    computeScores();
+    buildAllAssets();
+    renderAll();
+  }
+
+  prog(10,'FETCHING LIVE DATA…');
+  try{
+    var url='https://api.coincap.io/v2/assets?limit=100';
+    var r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+    if(!r.ok) throw new Error('CoinCap HTTP '+r.status);
+    var json=await r.json();
+    var data=json.data||[];
+    var allIds=CRYPTO_FREE.concat(CRYPTO_PRO).concat(CRYPTO_PREMIUM);
+    var fresh=data.filter(function(c){
+      return allIds.indexOf(c.id)>=0||allIds.indexOf(c.id.toLowerCase())>=0;
+    }).map(function(c){
+      var p24=parseFloat(c.changePercent24Hr)||0;
+      return {
+        id:c.id,sym:c.symbol.toUpperCase(),name:c.name,
+        price:parseFloat(c.priceUsd)||0,
+        image:'https://assets.coincap.io/assets/icons/'+c.symbol.toLowerCase()+'@2x.png',
+        mcap:parseFloat(c.marketCapUsd)||0,rank:parseInt(c.rank)||99,
+        p24:p24,p7:p24*3.2,p14:p24*5.1,p30:p24*8.4,
+        score:0,r7:0,r14:0,r30:0,type:'crypto',tierReq:getTierForCrypto(c.id)
+      };
+    });
+    if(fresh.length>0){
+      coins=fresh;
+      coins.sort(function(a,b){return a.rank-b.rank;});
+      CACHE.coins=coins;CACHE.coinsAt=now;
+      computeScores();
+    }
+  }catch(e){console.warn('Live data failed, using fallback:',e);}
+}
 }
 
 async function loadForex(){
@@ -976,12 +1007,19 @@ async function loadStocks(){
 }
 
 async function loadBTC(){
-  prog(85,'FETCHING BTC TREND…');await sleep(300);
+  prog(85,'FETCHING BTC TREND…');
   try{
-    var d=await apiFetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=200');
-    if(!d||!Array.isArray(d.prices)) return;
-    var p=d.prices,s=0;for(var i=0;i<p.length;i++) s+=p[i][1];
-    btcMA200=s/p.length;btcPrice=p[p.length-1][1];
+    // Use CoinCap history — no CORS issues
+    var end=Date.now();
+    var start=end-(200*24*60*60*1000);
+    var url='https://api.coincap.io/v2/assets/bitcoin/history?interval=d1&start='+start+'&end='+end;
+    var r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+    if(!r.ok) return;
+    var json=await r.json();
+    var prices=(json.data||[]).map(function(p){return parseFloat(p.priceUsd);});
+    if(!prices.length) return;
+    btcMA200=prices.reduce(function(a,b){return a+b;},0)/prices.length;
+    btcPrice=prices[prices.length-1];
   }catch(e){console.warn('BTC MA failed:',e);}
 }
 
@@ -1240,10 +1278,10 @@ async function doLoad(){
   processIncomingRef();var _d=checkMyReferrals();TIER=loadTier();
   busy=true;document.getElementById('rbtn').disabled=true;document.getElementById('rspin').className='spinning';
 
-  // Hard timeout — open app after 8s no matter what
+  // Hard timeout — open app after 3s no matter what
   var forceOpen=setTimeout(function(){
     document.getElementById('loader').classList.add('gone');
-  },8000);
+  },3000);
 
   try{
     await loadCoins();
@@ -1289,6 +1327,5 @@ async function doRefresh(){
 }
 doLoad();
 </script>
-
-
-</body></html>
+</body>
+</html>
