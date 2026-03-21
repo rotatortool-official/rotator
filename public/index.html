@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0059)file:///C:/Users/Daniel/Downloads/rotation_screener_v6.html -->
+<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v6_1.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -690,10 +690,8 @@ function dismissTip(){
   document.getElementById('onboard-tip').classList.add('gone');
   localStorage.setItem('rot_tip_seen','1');
 }
-/* Show splash on first ever visit */
-if(localStorage.getItem('rot_splash_seen')){
-  document.getElementById('splash').classList.add('gone');
-}
+/* Show splash on first ever visit — DISABLED, go straight to app */
+document.getElementById('splash').classList.add('gone');
 /* Show/hide onboarding tip */
 if(localStorage.getItem('rot_tip_seen')){
   document.getElementById('onboard-tip').classList.add('gone');
