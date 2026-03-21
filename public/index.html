@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v5_1.html -->
+<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v5_2.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +25,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 /* ══════════════════════════════
    SPLASH SCREEN
 ══════════════════════════════ */
-.splash{position:fixed;inset:0;background:#090c0f;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity .6s ease;}
+.splash{position:fixed;inset:0;background:#090c0f;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;transition:opacity .6s ease;}
 .splash.gone{opacity:0;pointer-events:none;}
 .splash-logo{display:flex;align-items:center;justify-content:center;margin-bottom:32px;animation:splashIn .8s ease forwards;}
 @keyframes splashIn{from{opacity:0;transform:scale(.85);}to{opacity:1;transform:scale(1);}}
@@ -333,7 +333,7 @@ td.pc{text-align:right;padding-left:2px;padding-right:2px;}
 .footer-sep{color:var(--bdr2);font-size:10px;}
 
 /* ── LOADER ── */
-.loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:600;transition:opacity .35s;}
+.loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:500;transition:opacity .35s;}
 .loader.gone{opacity:0;pointer-events:none;}
 .llogo{font-size:16px;font-weight:600;letter-spacing:.22em;color:var(--bnb);}
 .lmsg{font-size:11px;color:var(--muted);letter-spacing:.1em;}
@@ -616,7 +616,6 @@ var PRO_EXTRA_COINS = [
 ══════════════════════════════ */
 function closeSplash(){
   document.getElementById('splash').classList.add('gone');
-  document.getElementById('loader').classList.add('gone');
   localStorage.setItem('rot_splash_seen','1');
 }
 function dismissTip(){
