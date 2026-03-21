@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0059)file:///C:/Users/Daniel/Downloads/rotation_screener_v5.html -->
+<!-- saved from url=(0061)file:///C:/Users/Daniel/Downloads/rotation_screener_v5_1.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -616,6 +616,7 @@ var PRO_EXTRA_COINS = [
 ══════════════════════════════ */
 function closeSplash(){
   document.getElementById('splash').classList.add('gone');
+  document.getElementById('loader').classList.add('gone');
   localStorage.setItem('rot_splash_seen','1');
 }
 function dismissTip(){
@@ -829,7 +830,15 @@ async function doLoad(){
   processIncomingRef();var _d=checkMyReferrals();isPro=_d.pro||loadPro();
   busy=true;document.getElementById('rbtn').disabled=true;document.getElementById('rspin').className='spinning';
   try{await loadCoins();prog(50,'SCORING…');renderCoinSel();await loadBTC();prog(92,'RENDERING…');renderAll();prog(100,'READY');await sleep(320);document.getElementById('loader').classList.add('gone');}
-  catch(e){document.getElementById('lmsg').textContent='ERROR: '+e.message;document.getElementById('lbf').style.background='var(--red)';}
+  catch(e){
+    document.getElementById('lmsg').textContent='ERROR: '+e.message;
+    document.getElementById('lbf').style.background='var(--red)';
+    var skipBtn=document.createElement('button');
+    skipBtn.textContent='SKIP & ENTER →';
+    skipBtn.style.cssText='margin-top:16px;padding:8px 24px;background:rgba(243,186,47,.1);border:1px solid rgba(243,186,47,.3);color:#f3ba2f;font-family:IBM Plex Mono,monospace;font-size:12px;font-weight:600;letter-spacing:.15em;cursor:pointer;border-radius:3px;';
+    skipBtn.onclick=function(){document.getElementById('loader').classList.add('gone');document.getElementById('splash').classList.add('gone');};
+    document.getElementById('loader').appendChild(skipBtn);
+  }
   busy=false;document.getElementById('rbtn').disabled=false;document.getElementById('rspin').className='';
 }
 async function doRefresh(){if(busy) return;busy=true;document.getElementById('rbtn').disabled=true;document.getElementById('rspin').className='spinning';try{await loadCoins();await sleep(1200);await loadBTC();renderAll();}catch(e){console.error(e);}busy=false;document.getElementById('rbtn').disabled=false;document.getElementById('rspin').className='';}
